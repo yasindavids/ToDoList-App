@@ -1,26 +1,25 @@
 import { useState } from "react";
 import "./styles.css";
+import { NewTodoForm } from "./NewTodoForm";
 
 export default function App() {
   {
     //States
   }
-  const [newItem, setNewItem] = useState("");
+
   const [todos, setTodos] = useState([]);
 
-  //Function to add button functionality
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    //Array to store new tasks
+  function addTodo(title) {
+    // Create array of tasks
     setTodos((currentTodos) => {
       return [
         ...currentTodos,
-        { id: crypto.randomUUID(), title: newItem, completed: false },
+        { id: crypto.randomUUID(), title, completed: false },
       ];
     });
-    setNewItem("");
   }
+
+  /*---------------------------------------------------------------------------------------------------------- */
 
   //Toggles todo tasked based on whether its been checked or not
   function toggleTodo(id, completed) {
@@ -34,28 +33,20 @@ export default function App() {
     });
   }
 
+  /*---------------------------------------------------------------------------------------------------------- */
+
   //Deletes tasks
   function deleteTodo(id) {
     setTodos((currentTodos) => {
       return currentTodos.filter((todo) => todo.id !== id); //Returns all tasks except the checked one
     });
   }
+
   /*---------------------------------------------------------------------------------------------------------- */
+
   return (
     <>
-      {/*Manages button and item inputs*/}
-      <form onSubmit={handleSubmit} className="new-item-form">
-        <div className="form row">
-          <label htmlFor="item">New Task: </label>
-          <input
-            value={newItem}
-            onChange={(e) => setNewItem(e.target.value)} //Sets input to new item
-            type="text"
-            id="item"
-          />
-        </div>
-        <button className="btn">Add</button>
-      </form>
+      <NewTodoForm onSubmit={addTodo} /> {/*Calling component*/}
       {/*List of checkboxes for task*/}
       <h1 className="header">To Do List</h1>
       <ul className="list">
@@ -79,7 +70,7 @@ export default function App() {
                 className="btn btn-danger"
               >
                 {" "}
-                delete{" "}
+                Delete{" "}
               </button>
             </li>
           );
