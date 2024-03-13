@@ -4,9 +4,8 @@ import { NewTodoForm } from "./NewTodoForm";
 import { TodoList } from "./TodoList";
 
 export default function App() {
-  {
-    //States
-  }
+  //Hooks
+  //Checks local storage for any todos
   const [todos, setTodos] = useState(() => {
     const localValue = localStorage.getItem("ITEMS");
     if (localValue == null) return [];
@@ -17,6 +16,8 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("ITEMS", JSON.stringify(todos));
   }, [todos]);
+
+  /*---------------------------------------------------------------------------------------------------------- */
 
   function addTodo(title) {
     // Create array of tasks
