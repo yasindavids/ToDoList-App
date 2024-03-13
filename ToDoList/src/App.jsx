@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles.css";
 import { NewTodoForm } from "./NewTodoForm";
+import { TodoList } from "./TodoList";
 
 export default function App() {
   {
     //States
   }
+  const [todos, setTodos] = useState(() => {
+    const localValue = localStorage.getItem("ITEMS");
+    if (localValue == null) return [];
+    return JSON.parse(localValue);
+  });
 
-  const [todos, setTodos] = useState([]);
+  //Stores todos in local storage
+  useEffect(() => {
+    localStorage.setItem("ITEMS", JSON.stringify(todos));
+  }, [todos]);
 
   function addTodo(title) {
     // Create array of tasks
@@ -49,33 +58,7 @@ export default function App() {
       <NewTodoForm onSubmit={addTodo} /> {/*Calling component*/}
       {/*List of checkboxes for task*/}
       <h1 className="header">To Do List</h1>
-      <ul className="list">
-        {todos.length === 0 && "Nothing To Do!"}{" "}
-        {/*short circuit to print msg*/}
-        {/**Returns an <li> element for each todo element */}
-        {todos.map((todo) => {
-          return (
-            <li key={todo.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={(e) => toggleTodo(todo.id, e.target.checked)} //Calls toggle function to check the box
-                />
-
-                {todo.title}
-              </label>
-              <button
-                onClick={() => deleteTodo(todo.id)} //Calls deleteTodo on click
-                className="btn btn-danger"
-              >
-                {" "}
-                Delete{" "}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
     </>
   );
 }
